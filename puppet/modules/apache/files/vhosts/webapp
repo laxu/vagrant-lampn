@@ -1,0 +1,23 @@
+<VirtualHost webapp:80>
+    ServerAdmin webmaster@localhost
+    ServerName webapp
+
+    DocumentRoot /var/www/webapp
+    <Directory />
+        Options FollowSymLinks
+        AllowOverride None
+    </Directory>
+    <Directory /var/www/webapp>
+        Options Indexes FollowSymLinks MultiViews
+        AllowOverride All
+        Order allow,deny
+        Allow from all
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/webapp-error.log
+
+    # Possible values include: debug, info, notice, warn, error, crit, alert, emerg.
+    LogLevel warn
+
+    CustomLog ${APACHE_LOG_DIR}/webapp-access.log combined
+</VirtualHost>
