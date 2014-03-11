@@ -12,8 +12,7 @@ Vagrant.configure("2") do |config|
     # Provider: VirtualBox (default)
     config.vm.box = "precise64"
     config.vm.box_url = "http://files.vagrantup.com/precise64.box"
-    config.vm.host_name = hostname + '.' + domain
-	
+
 	# Provider: VMWare Workstation
 	config.vm.provider :vmware_workstation do |v|
 		config.vm.box = "precise64_vmware"
@@ -23,7 +22,6 @@ Vagrant.configure("2") do |config|
 	end
 
     config.vm.provider "virtualbox" do |v|
-		v.name = "my_vm"
 		v.customize [
 			'modifyvm', :id,
 			'--name', hostname,
@@ -35,6 +33,7 @@ Vagrant.configure("2") do |config|
     end
 	
 	# Common settings
+	config.vm.host_name = (domain) ? hostname + '.' + domain : hostname
 	config.vm.network "forwarded_port", guest: 80, host: 8080
     config.vm.network :private_network, ip: ip
     config.ssh.forward_agent = true

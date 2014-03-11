@@ -19,7 +19,7 @@ class apache {
       ensure => directory;
   }
 
-  apache::vhost { ['kiosked']: }
+  apache::vhost { ['webapp']: }
 }
 
 # == Define: module
