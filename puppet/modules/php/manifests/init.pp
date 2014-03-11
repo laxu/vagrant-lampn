@@ -3,7 +3,8 @@
 # Installs PHP5 and necessary modules. Sets config files.
 #
 class php {
-  package { ['php5',
+
+package { ['php5',
              'php5-cli',
              'libapache2-mod-php5',
              'php-apc',
@@ -20,7 +21,8 @@ class php {
              'php5-xdebug',
              'php5-xmlrpc',
              'php5-xsl']:
-    ensure => present;
+    ensure => present,
+    require => Exec['change PHP repo']
   }
 
   file {
@@ -32,12 +34,12 @@ class php {
       source  => 'puppet:///modules/php/apache2-php.ini',
       require => Package['php5'];
 
-    '/etc/php5/cli':
+    /*'/etc/php5/cli':
       ensure => directory,
       before => File ['/etc/php5/cli/php.ini'];
-
-    '/etc/php5/cli/php.ini':
+*/
+    /*'/etc/php5/cli/php.ini':
       source  => 'puppet:///modules/php/cli-php.ini',
-      require => Package['php5-cli'];
+      require => Package['php5-cli'];*/
   }
 }
