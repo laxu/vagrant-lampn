@@ -4,8 +4,12 @@
 #
 class nodejs {
 
+  helpers::addrepo {'NodeJS':
+    repo => 'ppa:chris-lea/node.js'
+  }
+
   package { 'nodejs':
-    require => Exec['add latest NodeJS repo']
+    require => Helpers::Addrepo['NodeJS']
   }
 
   # Install npm-check-updates
@@ -25,18 +29,22 @@ class nodejs {
   # Install package.json that installs some Grunt modules
   file {
     '/vagrant':
-    ensure => directory,
-    before => File ['/vagrant/package.json'];
+      ensure => directory,
+      before => File ['/vagrant/package.json'];
 
     '/vagrant/package.json':
-    source  => 'puppet:///modules/nodejs/package.json',
-    require => Package['nodejs'];
+      source  => 'puppet:///modules/nodejs/package.json',
+      ensure => present,
+      replace => 'no',
+      require => Package['nodejs'];
   }
 
+  # Install the Grunt modules, unless node_modules directory exists already
   exec { 'install Grunt modules':
     cwd => '/vagrant',
-    command => '/usr/bin/npm install',
-    onlyif => '/usr/bin/test -e /vagrant/package.json',
+    command => '/usr/bin/npm install --no-bin-links',
+    unless => '/usr/bin/test -d /vagrant/node_modules',
+    require => Package['nodejs'],
     returns => 255
   }
 
