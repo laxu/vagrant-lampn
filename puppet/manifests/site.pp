@@ -15,4 +15,4 @@ File {
   mode  => '0644',
 }
 
-include baseconfig, apache, mysql, php, nodejs
+include helpers, baseconfig, apache, mysql, php, nodejs
