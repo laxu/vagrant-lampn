@@ -4,31 +4,38 @@
 #
 class php {
 
-package { ['php5',
-             'php5-cli',
-             'libapache2-mod-php5',
-             'php-apc',
-             'php5-curl',
-             'php5-dev',
-             'php5-gd',
-             'php5-imagick',
-             'php5-mcrypt',
-             'php5-memcache',
-             'php5-mysql',
-             'php5-pspell',
-             'php5-sqlite',
-             'php5-tidy',
-             'php5-xdebug',
-             'php5-xmlrpc',
-             'php5-xsl']:
+  helpers::addrepo {'PHP':
+    repo => 'ppa:ondrej/php5-oldstable'
+  }
+
+  package { 'php5':
     ensure => present,
-    require => Exec['change PHP repo']
+    require => Helpers::Addrepo['PHP']
+  }
+
+  package { 'php5-cli':
+    ensure => present,
+    require => Package['php5']
+  }
+
+  package { [ 'php-apc',
+              'php5-curl',
+              'php5-gd',
+              'php5-imagick',
+              'php5-mcrypt',
+              'php5-memcache',
+              'php5-mysql',
+              'php5-sqlite',
+              'php5-xsl']:
+    ensure => present,
+    require => Package['php5']
   }
 
   file {
     '/etc/php5/apache2':
       ensure => directory,
-      before => File ['/etc/php5/apache2/php.ini'];
+      before => File ['/etc/php5/apache2/php.ini'],
+      require => Package['php5'];
 
     '/etc/php5/apache2/php.ini':
       source  => 'puppet:///modules/php/apache2-php.ini',
