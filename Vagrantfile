@@ -1,11 +1,12 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-hostname    = 'webapp'
-domain      = 'example.com'
-ip          = "192.168.50.4"
-cpus        = 1
-ram         = 1024
+hostname        = 'webapp'
+domain          = 'example.com'
+ip              = "192.168.50.4"
+forwarded_port  = 8080
+cpus            = 1
+ram             = 1024
 
 Vagrant.configure("2") do |config|
 
@@ -34,13 +35,18 @@ Vagrant.configure("2") do |config|
 	
 	# Common settings
 	config.vm.host_name = (domain) ? hostname + '.' + domain : hostname
-	config.vm.network "forwarded_port", guest: 80, host: 8080
-    config.vm.network :private_network, ip: ip
+	config.vm.network "forwarded_port", guest: 80, host: forwarded_port
     config.ssh.forward_agent = true
     config.vm.synced_folder ".", "/vagrant", :mount_options => [
         'dmode=777',
         'fmode=666'
     ]
+
+    if ip
+        config.vm.network :private_network, ip: ip
+    else
+        config.vm.network :public_network
+    end
 
 	# Puppet provision
     config.vm.provision :puppet do |puppet|
