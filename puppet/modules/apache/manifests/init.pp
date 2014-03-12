@@ -3,13 +3,13 @@
 # Installs packages for Apache2, enables modules, and sets config files.
 #
 class apache {
-  package { ['apache2', 'apache2-mpm-prefork']:
-    ensure => present;
+  package { 'apache2':
+    ensure => present
   }
 
   service { 'apache2':
     ensure  => running,
-    require => Package['apache2'];
+    require => Package['apache2']
   }
 
   apache::conf { ['apache2.conf', 'envvars', 'ports.conf']: }
@@ -20,6 +20,7 @@ class apache {
   }
 
   apache::vhost { ['webapp']: }
+  apache::disablevhost { ['default']: }
 }
 
 # == Define: module
@@ -67,5 +68,17 @@ define apache::vhost() {
     "/var/www/${name}":
       ensure => link,
       target => "/vagrant/";
+  }
+}
+
+# == Define: disablesite
+#
+# Disables an Apache virtual host
+#
+define apache::disablevhost() {
+  exec { "disable vhost ${name}":
+    command => "/usr/sbin/a2dissite ${name}",
+    require => Package['apache2'],
+    notify => Service['apache2']
   }
 }
