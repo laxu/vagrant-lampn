@@ -17,8 +17,9 @@ You can configure basic virtual machine parameters from Vagrantfile. Everything 
             * Files installed by the module
 
 At the moment the modules are:
-* apache - Installs Apache 2
+* apache - Installs Apache 2, check the "webapp" vhost file if you need to make changes to server config
 * baseconfig - Basic configuration for modules and environment
 * mysql - Installs a MySQL server, remember to change the username and password to your liking here
 * nodejs - Installs NodeJS
 * php - Installs PHP 5.4.x
+* helpers - Helper resource types for Puppet scripts
