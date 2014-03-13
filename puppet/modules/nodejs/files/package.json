@@ -5,7 +5,7 @@
     "description": "Basic NPM install package.",
     "repository": {
         "type": "git",
-        "url": "https://bitbucket.org/nordsoftware/kidmemo-app.git"
+        "url": "https://github.com/laxu/vagrant-lampn.git"
     },
     "keywords": [
         "yii",
