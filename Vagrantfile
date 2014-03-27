@@ -7,6 +7,7 @@ ip              = "192.168.50.4"
 forwarded_port  = 8080
 cpus            = 1
 ram             = 1024
+synced_folders  = ["."]
 
 Vagrant.configure("2") do |config|
 
@@ -28,27 +29,36 @@ Vagrant.configure("2") do |config|
             '--name', hostname,
             '--cpus', cpus,
             '--memory', ram,
-            '--natdnshostresolver1', 'on',
-            '--natdnsproxy1', 'on'
+        ]
+    end
+	
+	# Common settings
+	config.vm.host_name = (domain) ? hostname + '.' + domain : hostname
+	if forwarded_port
+	    config.vm.network "forwarded_port", guest: 80, host: forwarded_port
+	end
+    config.ssh.forward_agent = true
+
+    # Mount synced folders
+    synced_folders.each do |folder|
+        config.vm.synced_folder folder, "/vagrant", :mount_options => [
+            'dmode=777',
+            'fmode=666'
         ]
     end
 
-    # Common settings
-    config.vm.host_name = (domain) ? hostname + '.' + domain : hostname
-    config.vm.network "forwarded_port", guest: 80, host: forwarded_port
-    config.ssh.forward_agent = true
-    config.vm.synced_folder ".", "/vagrant", :mount_options => [
-        'dmode=777',
-        'fmode=666'
-    ]
-
+    # Set up networking
     if ip
-        config.vm.network :private_network, ip: ip
+        if ip == 'dhcp'
+            config.vm.network :private_network, type: :dhcp
+        else
+            config.vm.network :private_network, ip: ip
+        end
     else
         config.vm.network :public_network
     end
 
-    # Puppet provision
+	# Puppet provision
     config.vm.provision :puppet do |puppet|
         puppet.manifests_path = 'puppet/manifests'
         puppet.manifest_file = 'site.pp'
