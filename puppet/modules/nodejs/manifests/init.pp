@@ -45,7 +45,7 @@ class nodejs {
     command => '/usr/bin/npm install --no-bin-links',
     unless => '/usr/bin/test -d /vagrant/node_modules',
     require => Package['nodejs'],
-    returns => 255
+    returns => 34
   }
 
 }

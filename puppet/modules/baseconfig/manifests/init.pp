@@ -27,8 +27,4 @@ class baseconfig {
       source => 'puppet:///modules/baseconfig/bashrc'
   }
 
-  # Load additional packages
-  package { 'vim':
-      ensure => present
-  }
 }
